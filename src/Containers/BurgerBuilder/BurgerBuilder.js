@@ -51,7 +51,8 @@ class BurgerBuilder extends Component {
                 <Buildcontrols 
                 ingredientAdded={this.addingredienthandler}
                 ingredientRemoved={this.removeingredienthandler}
-                disabled={disabledInfo}/>
+                disabled={disabledInfo}
+                price={this.state.totalPrice}/>
             </Fragment>
         );
     }
