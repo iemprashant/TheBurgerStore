@@ -1,7 +1,7 @@
 import React from 'react';
-import Layout from "./Components/Layout/Layout"
 import './App.css';
 import BurgerBuilder from './Containers/BurgerBuilder/BurgerBuilder';
+import Layout from './Containers/Layout/Layout';
 
 function App() {
   return (
