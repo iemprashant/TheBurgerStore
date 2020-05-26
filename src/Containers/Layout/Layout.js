@@ -2,7 +2,6 @@ import React, { Fragment, Component } from 'react';
 import classes from './Layout.module.css'
 import Toolbar from '../../Components/Navigation/Toolbar/Toolbar';
 import SideDrawer from '../../Components/Navigation/SideDrawer/SideDrawer';
-
 class Layout extends Component{
     state={
         showSideDrawer: false
