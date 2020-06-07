@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import classes from './ContactData.module.css';
-import axios from 'axios';
+import axios from '../../axios-orders';
 import Button from '../../Components/UI/Button/Button'
 import Spinner from '../../Components/UI/Spinner/Spinner'
-import instance from '../../axios-orders';
 
 class ContactData extends Component {
     state = {
@@ -34,7 +33,7 @@ class ContactData extends Component {
             },
             deliveryMethod: 'fastest'
         }
-        axios.post( 'orders.json', order )
+        axios.post( 'https://burger-app-d40ab.firebaseio.com/orders.json', order )
             .then( response => {
                 this.setState( { loading: false } );
                 this.props.history.push('/');
