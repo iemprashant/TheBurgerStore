@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import classes from './ContactData.module.css';
 import axios from '../../axios-orders';
+import { connect } from 'react-redux'
 import Button from '../../Components/UI/Button/Button'
 import Spinner from '../../Components/UI/Spinner/Spinner'
 import Input from '../../Components/UI/input/input'
@@ -130,11 +131,11 @@ class ContactData extends Component {
             formData[formElementIdentifier] = this.state.orderForm[formElementIdentifier].value;
         }
         const order = {
-            ingredients: this.props.ingredients,
+            ingredients: this.props.ings,
             price: this.props.price,
             orderData: formData
         }
-        console.log(this.props.ingredients);
+        console.log(this.props.ings);
         axios.post( 'https://burger-app-d40ab.firebaseio.com/orders.json', order )
             .then( response => {
                 this.setState( { loading: false } );
@@ -198,5 +199,10 @@ class ContactData extends Component {
         );
     }
 }
+const mapStateToProps = state =>{
+    return {
+        ings: state.ingredients,
+        price: state.totalPrice
+}};
 
-export default ContactData;
+export default connect(mapStateToProps,null)(ContactData);
