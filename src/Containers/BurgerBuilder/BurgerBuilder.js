@@ -6,7 +6,7 @@ import Modal from '../../Components/UI/Modal/Modal';
 import OrderSummary from '../../Components/Burger/OrderSummary/OrderSummary';
 import axios from '../../axios-orders'
 import Spinner from './../../Components/UI/Spinner/Spinner'
-import * as actionTypes from '../../store/Actions'
+import * as bbaction from '../../store/actions/index'
 
 
 class BurgerBuilder extends Component {
@@ -94,8 +94,8 @@ const mapStateToProps = state=>{
 
 const mapDispatchToProps = dispatch =>{
     return{
-        onIngredientsAdded:(ingName)=>dispatch({type:actionTypes.ADD_INGREDIENT,ingredientName: ingName}),
-        onIngredientsRemoved:(ingName)=>dispatch({type:actionTypes.REMOVE_INGREDIENT,ingredientName: ingName}),
+        onIngredientsAdded:(ingName)=>dispatch(bbaction.addIngredient(ingName)),
+        onIngredientsRemoved:(ingName)=>dispatch(bbaction.removeIngredient(ingName)),
     }
 }
 
