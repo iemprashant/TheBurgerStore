@@ -5,7 +5,7 @@ import App from './App';
 import { BrowserRouter} from 'react-router-dom'
 import { Provider } from 'react-redux';
 import BurgerBuilderReducer from './store/reducers/burgerBuilderReducer';
-import OrderReducer from './store/reducers/order';
+import OrderReducer from './store/reducers/orderReducer';
 import { createStore,applyMiddleware,compose,combineReducers} from 'redux';
 import thunk from 'redux-thunk';
 
