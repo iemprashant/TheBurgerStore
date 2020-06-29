@@ -37,7 +37,8 @@ class auth extends Component {
                 valid: false,
                 touched: false
             } 
-        }
+        },
+        isSignup:false
     }
     checkValidity(value, rules) {
         let isValid = true;
@@ -81,9 +82,14 @@ class auth extends Component {
         this.setState({controls:updatedControls});
     };
     submitHandler=(event)=>{
-        console.log(this.state.controls.email.value,this.state.controls.password.value);
-        this.props.onAuth(this.state.controls.email.value,this.state.controls.password.value)
+        event.preventDefault();
+        this.props.onAuth(this.state.controls.email.value,this.state.controls.password.value,this.state.isSignup)
     };
+    switchAuthModeHandler=()=>{
+        this.setState(prevState=>{
+            return {isSignup:!prevState.isSignup}
+        })
+    }
     render() {
         const formElementsArray = [];
         for (let key in this.state.controls) {
@@ -107,16 +113,19 @@ class auth extends Component {
             <div className={classes.Auth}>
                 <form onSubmit={this.submitHandler}>
                     {form}
-                    <Button btnType="Success">SUBMIT</Button>
+                    <Button btnType="Success">{this.state.isSignup? 'SIGNUP' : 'SIGNIN'}</Button>
                 </form>
+                <Button 
+                    clicked={this.switchAuthModeHandler}
+                    btnType="Danger">SWITCH TO {this.state.isSignup? 'SIGNIN' : 'SIGNUP'}</Button>
             </div>
         )
     }
 }
 const mapDispatchToProps= dispatch =>{
     return{
-        onAuth:(email,password)=>dispatch(actions.auth(email,password))
-    }
-}
+        onAuth:(email,password,isSignup)=>dispatch(actions.auth(email,password,isSignup))
+    };
+};
 
 export default connect(null ,mapDispatchToProps)(auth);

@@ -1,4 +1,5 @@
 import * as actionTypes from './actionTypes';
+import axios from 'axios';
 
 export const authStart = () => {
     return {
@@ -6,10 +7,11 @@ export const authStart = () => {
     };
 }
 
-export const authSuccess= (authData) => {
+export const authSuccess= (idToken,userId) => {
     return {
         type:actionTypes.AUTH_SUCCESS,
-        authData:authData
+        idToken:idToken,
+        userId:userId
     };
 }
 
@@ -19,8 +21,27 @@ export const authFail= (error) => {
         error:error
     };
 }
-export const auth = (email,password) => {
+export const auth = (email,password,isSignup) => {
     return dispatch=>{
         dispatch(authStart());
+        const authData={
+            email:email,
+            password:password,
+            returnSecureToken:true
+        }
+        let url='https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAhvtfib48nbdboM_zlaE9hTvhVoNl-M0U';
+        if(!isSignup){
+            url='https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAhvtfib48nbdboM_zlaE9hTvhVoNl-M0U';
+        }
+        axios.post(url,authData)
+        .then( response=>{
+                console.log(response.data);
+                dispatch(authSuccess(response.data.idToken,response.data.userId));
+            }
+        )
+        .catch(error=>{
+            console.log(error);
+            dispatch(authFail(error))
+        })
     };
 }
