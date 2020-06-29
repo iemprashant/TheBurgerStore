@@ -2,9 +2,6 @@ import React, { Fragment, Component } from 'react'
 import Button from '../../UI/Button/Button'
 
 class OrderSummary extends Component{
-    constructor(props) {
-      super(props);
-   }
    componentWillUpdate(){
     console.log('oswillupdate')
    }
