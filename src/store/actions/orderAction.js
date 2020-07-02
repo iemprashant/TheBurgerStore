@@ -13,15 +13,15 @@ export const purchaseBurgerStart = (orderData)=>{
         type:actionTypes.PURCHASE_BURGER_START
     }
 }
-export const purchaseBurger = (orderData)=>{
+export const purchaseBurger = (orderData,token)=>{
     return dispatch =>{
         dispatch(purchaseBurgerStart());
-        axios.post( 'https://burger-app-d40ab.firebaseio.com/orders.json', orderData)
+        axios.post( 'https://burger-app-d40ab.firebaseio.com/orders.json?auth='+ token, orderData)
             .then( response => {
                 dispatch(purchaseBurgerSuccess(response.data.name,orderData))
             } )
             .catch( error => {
-                console.log('ordercancel')
+                alert(error)
             } );
     };
 };
@@ -41,10 +41,10 @@ export const fetchOrderStart = ()=>{
         type:actionTypes.FETCH_ORDERS_START
     }
 }
-export const fetchOrder = ()=>{
+export const fetchOrder = (token)=>{
     return dispatch=>{
         dispatch(fetchOrderStart())
-        axios.get( 'https://burger-app-d40ab.firebaseio.com/orders.json')
+        axios.get( 'https://burger-app-d40ab.firebaseio.com/orders.json?auth=' + token)
         .then( response => {
             const fetchedOrders=[];
             for (let key in response.data){
@@ -53,10 +53,9 @@ export const fetchOrder = ()=>{
                     , id: key
                 });
             }
-            console.log(fetchedOrders);
             dispatch(fetchOrderSuccess(fetchedOrders))
         } )
-        .catch(err=>(console.log(err)));
+        .catch(err=>(alert(err)));
         
     }
 }
