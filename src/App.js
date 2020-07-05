@@ -1,14 +1,21 @@
 import React, { Component } from 'react';
 import './App.css';
 import BurgerBuilder from './Containers/BurgerBuilder/BurgerBuilder';
-import Layout from './Containers/Layout/Layout'; 
-import Checkout from './Containers/Checkout/Checkout';
+import Layout from './Containers/Layout/Layout';
 import { Route, Switch, withRouter, Redirect } from 'react-router';
-import Orders from './Containers/Orders/Orders';
-import auth from './Containers/Auth/auth';
 import logout from './Containers/Auth/Auth/Logout';
 import * as actions from './store/actions/index'
 import { connect } from 'react-redux';
+import asyncComponent from './hoc/asyncComponent/asyncComponent';
+const asyncCheckout = asyncComponent(()=>{
+  return import ('./Containers/Checkout/Checkout')
+})
+const asyncOrders = asyncComponent(()=>{
+  return import ('./Containers/Orders/Orders')
+})
+const asyncAuth = asyncComponent(()=>{
+  return import ('./Containers/Auth/auth')
+})
 class App extends Component {
   componentDidMount(){
     this.props.onTryAutoSignup();
@@ -16,7 +23,7 @@ class App extends Component {
   render(){
     let routes = (
       <Switch>
-        <Route path="/auth" component={auth}/>
+        <Route path="/auth" component={asyncAuth}/>
         <Route path="/" exact component={BurgerBuilder}/>
         <Redirect to ='/'/>
       </Switch>
@@ -24,8 +31,8 @@ class App extends Component {
     if (this.props.isAuthenticated){
       routes=(
         <Switch>
-        <Route path="/Checkout" component={Checkout}/>
-        <Route path="/orders" component={Orders}/>
+        <Route path="/Checkout" component={asyncCheckout}/>
+        <Route path="/orders" component={asyncOrders}/>
         <Route path="/logout" component={logout}/>
         <Route path="/auth" component={auth}/>
         <Route path="/" exact component={BurgerBuilder}/>
