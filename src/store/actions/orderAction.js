@@ -41,10 +41,11 @@ export const fetchOrderStart = ()=>{
         type:actionTypes.FETCH_ORDERS_START
     }
 }
-export const fetchOrder = (token)=>{
+export const fetchOrder = (token,userId)=>{
     return dispatch=>{
         dispatch(fetchOrderStart())
-        axios.get( 'https://burger-app-d40ab.firebaseio.com/orders.json?auth=' + token)
+        const queryParams = '?auth=' + token + '&orderBy="userId"&equalTo="' + userId + '"';
+        axios.get( '/orders.json' + queryParams)
         .then( response => {
             const fetchedOrders=[];
             for (let key in response.data){
@@ -53,9 +54,9 @@ export const fetchOrder = (token)=>{
                     , id: key
                 });
             }
-            dispatch(fetchOrderSuccess(fetchedOrders))
+            dispatch(fetchOrderSuccess(fetchedOrders))  
         } )
-        .catch(err=>(alert(err)));
+        .catch(err=>console.log(err));
         
     }
 }
