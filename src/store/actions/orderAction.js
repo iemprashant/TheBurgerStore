@@ -35,6 +35,13 @@ export const fetchOrderSuccess = (orders)=>{
         type:actionTypes.FETCH_ORDERS_SUCCESS,
         orders:orders
     };
+
+};
+export const fetchOrdersFail = ( error ) => {
+    return {
+        type: actionTypes.FETCH_ORDERS_FAIL,
+        error: error
+    };
 };
 export const fetchOrderStart = ()=>{
     return {
@@ -56,7 +63,9 @@ export const fetchOrder = (token,userId)=>{
             }
             dispatch(fetchOrderSuccess(fetchedOrders))  
         } )
-        .catch(err=>console.log(err));
+        .catch( err=>
+            dispatch(fetchOrdersFail(err))
+        );
         
     }
 }

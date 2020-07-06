@@ -3,6 +3,9 @@ import Order from '../../Components/Order/Order'
 import * as actions from '../../store/actions/index'
 import { connect } from 'react-redux'
 import Spinner from '../../Components/UI/Spinner/Spinner'
+import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
+import axios from '../../axios-orders'
+
 export class Orders extends Component {
     componentDidMount=()=>{
        this.props.onFetchOrders(this.props.token,this.props.userId);
@@ -33,4 +36,4 @@ const mapDispatchToProps = dispatch =>{
     };
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(Orders);
+export default connect(mapStateToProps,mapDispatchToProps)( withErrorHandler( Orders, axios ) );
