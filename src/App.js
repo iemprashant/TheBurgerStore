@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect,Suspense } from 'react';
 import './App.css';
 import BurgerBuilder from './Containers/BurgerBuilder/BurgerBuilder';
 import Layout from './Containers/Layout/Layout';
@@ -6,35 +6,33 @@ import { Route, Switch, withRouter, Redirect } from 'react-router';
 import logout from './Containers/Auth/Auth/Logout';
 import * as actions from './store/actions/index'
 import { connect } from 'react-redux';
-import asyncComponent from './hoc/asyncComponent/asyncComponent';
-const asyncCheckout = asyncComponent(()=>{
+const Checkout =React.lazy(()=>{
   return import ('./Containers/Checkout/Checkout')
 })
-const asyncOrders = asyncComponent(()=>{
+const Orders = React.lazy(()=>{
   return import ('./Containers/Orders/Orders')
 })
-const asyncAuth = asyncComponent(()=>{
+const Auth = React.lazy(()=>{
   return import ('./Containers/Auth/auth')
 })
-class App extends Component {
-  componentDidMount(){
-    this.props.onTryAutoSignup();
-  }
-  render(){
+const App= (props)=>{
+  useEffect(() => {
+    props.onTryAutoSignup();
+  }, []);
     let routes = (
       <Switch>
-        <Route path="/auth" component={asyncAuth}/>
+        <Route path="/auth" render={()=><asyncAuth/>}/>
         <Route path="/" exact component={BurgerBuilder}/>
         <Redirect to ='/'/>
       </Switch>
     );
-    if (this.props.isAuthenticated){
+    if (props.isAuthenticated){
       routes=(
         <Switch>
-        <Route path="/Checkout" component={asyncCheckout}/>
-        <Route path="/orders" component={asyncOrders}/>
+        <Route path="/Checkout" render={()=><Checkout/>}/>
+        <Route path="/orders" render={()=><Orders/>}/>
         <Route path="/logout" component={logout}/>
-        <Route path="/auth" component={asyncAuth}/>
+        <Route path="/auth" render={()=><Auth/>}/>
         <Route path="/" exact component={BurgerBuilder}/>
         <Redirect to ='/'/>
       </Switch>  
@@ -43,12 +41,13 @@ class App extends Component {
     return (
       <div>
         <Layout>
+          <Suspense fallback={<p>Loading...</p>}>
           {routes}
+          </Suspense>
         </Layout>
       </div>
-    );
-  }
-};
+    )
+}
 const mapStateToProps = state =>{
   return {
       isAuthenticated :state.auth.token!==null

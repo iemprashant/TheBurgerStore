@@ -8,7 +8,7 @@ export const purchaseBurgerSuccess = (id,orderData)=>{
         orderData:orderData
     };
 };
-export const purchaseBurgerStart = (orderData)=>{
+export const purchaseBurgerStart = ()=>{
     return {
         type:actionTypes.PURCHASE_BURGER_START
     }
