@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, {Fragment, useEffect, useState } from 'react'
 import {connect} from 'react-redux'; 
 import Burger from '../../Components/Burger/Burger';
 import Buildcontrols from '../../Components/Burger/BuildControls/buildcontrols';
@@ -8,15 +8,15 @@ import Spinner from './../../Components/UI/Spinner/Spinner'
 import * as bbaction from '../../store/actions/index'
 
 
-class BurgerBuilder extends Component {
+const BurgerBuilder= props=>{
 
-    state={
-        purchasing : false
-    }
-    componentDidMount(){
-        this.props.onInitIngredients();
-    }
-    updatePurchaseState (ingredients) {
+    const [purchasing,setPurchasing]=useState(false);
+
+    useEffect(() => {
+        props.onInitIngredients();
+    }, [])
+
+    const updatePurchaseState =(ingredients)=> {
         const sum = Object.keys( ingredients )
             .map( igKey => {
                 return ingredients[igKey];
@@ -26,26 +26,24 @@ class BurgerBuilder extends Component {
             }, 0 );
          return sum > 0 ;
     }
-    purchasablehandler=()=>{
-        if(this.props.isAuthenticated){
-            this.setState({purchasing:true});
+    const purchasablehandler=()=>{
+        if(props.isAuthenticated){
+            setPurchasing(true);
         }else{
-            this.props.onSetAuthRedirectPath('/Checkout');
-            this.props.history.push('/auth');
+            props.onSetAuthRedirectPath('/Checkout');
+            props.history.push('/auth');
         }
         
     }
-    cancelPurchasehandler=()=>{
-        this.setState({purchasing:false})
+    const cancelPurchasehandler=()=>{
+        setPurchasing(false);
     }
-    continuePurchasehandler=()=>{
-        this.props.onInitPurchase();
-        this.props.history.push('/checkout');
+    const continuePurchasehandler=()=>{
+        props.onInitPurchase();
+        props.history.push('/checkout');
     }
-
-    render() {
         const disabledInfo = {
-            ...this.props.ings
+            ...props.ings
         };
         for ( let key in disabledInfo ) {
             disabledInfo[key] = disabledInfo[key] <= 0
@@ -53,36 +51,35 @@ class BurgerBuilder extends Component {
         //{salad:true,meat:false...like this we will get}
         let ordersum=null;
         let burger=<Spinner/>
-        if(this.props.ings){
+        if(props.ings){
             burger=(
                 <Fragment>
-                    <Burger ingredients={this.props.ings}/>
+                    <Burger ingredients={props.ings}/>
                     <Buildcontrols 
-                    ingredientAdded={this.props.onIngredientsAdded}
-                    ingredientRemoved={this.props.onIngredientsRemoved}
+                    ingredientAdded={props.onIngredientsAdded}
+                    ingredientRemoved={props.onIngredientsRemoved}
                     disabled={disabledInfo}
-                    price={this.props.price}
-                    purchasable={this.updatePurchaseState(this.props.ings)}
-                    ordered={this.purchasablehandler}
-                    isAuth={this.props.isAuthenticated}/>
+                    price={props.price}
+                    purchasable={updatePurchaseState(props.ings)}
+                    ordered={purchasablehandler}
+                    isAuth={props.isAuthenticated}/>
                 </Fragment>
             );
             ordersum=<OrderSummary 
-                ingredients={this.props.ings}
-                cancel={this.cancelPurchasehandler}
-                continue={this.continuePurchasehandler}
-                price={this.props.price}/>;
+                ingredients={props.ings}
+                cancel={cancelPurchasehandler}
+                continue={continuePurchasehandler}
+                price={props.price}/>;
         }
         return (
             <Fragment>
-                <Modal show ={this.state.purchasing} modalclose={this.cancelPurchasehandler}>
+                <Modal show ={purchasing} modalclose={cancelPurchasehandler}>
                     {ordersum}
                 </Modal>
                 {burger}
             </Fragment>
         );
     }
-}
 const mapStateToProps = state=>{
     return{
         ings: state.burgerBuilder.ingredients,
