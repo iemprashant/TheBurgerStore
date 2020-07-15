@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-
-import Input from '../../components/UI/Input/Input';
-import Button from '../../components/UI/Button/Button';
-import Spinner from '../../components/UI/Spinner/Spinner';
-import classes from './Auth.css';
+import Input from '../../Components/UI/input/input';
+import Button from '../../Components/UI/Button/Button';
+import Spinner from '../../Components/UI/Spinner/Spinner';
+import classes from './auth.module.css';
 import * as actions from '../../store/actions/index';
-import { updateObject, checkValidity } from '../../shared/utility';
+import { updateObject, checkValidity } from '../../shared/utilitiy';
 
-const auth = props => {
+const Auth = props => {
   const [authForm, setAuthForm] = useState({
     email: {
       elementType: 'input',
@@ -41,12 +40,13 @@ const auth = props => {
     }
   });
   const [isSignup, setIsSignup] = useState(true);
+  const {buildingBurger,authRedirectPath,onSetAuthRedirectPath}=props;
 
   useEffect(() => {
-    if (!props.buildingBurger && props.authRedirectPath !== '/') {
-      props.onSetAuthRedirectPath();
+    if (!buildingBurger && authRedirectPath !== '/') {
+      onSetAuthRedirectPath();
     }
-  }, []);
+  }, [buildingBurger,authRedirectPath,onSetAuthRedirectPath]);
 
   const inputChangedHandler = (event, controlName) => {
     const updatedControls = updateObject(authForm, {
@@ -119,8 +119,8 @@ const auth = props => {
         SWITCH TO {isSignup ? 'SIGNIN' : 'SIGNUP'}
       </Button>
     </div>
-  );
-};
+  )
+}
 
 const mapStateToProps = state => {
   return {
@@ -140,7 +140,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(auth);
+export default connect( mapStateToProps, mapDispatchToProps )(Auth);

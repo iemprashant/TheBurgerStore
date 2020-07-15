@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
 import classes from './ContactData.module.css';
 import { connect } from 'react-redux'
 import Button from '../../Components/UI/Button/Button'
